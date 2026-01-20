@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau Périodique de l'IA</title>
+    <title>Tableau Périodique de l'IA - v2.0</title>
     <style>
         * {
             margin: 0;
@@ -12,31 +12,43 @@
         }
 
         :root {
-            /* Mode Clair (par défaut) */
-            --bg-primary: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
-            --bg-secondary: rgba(255, 255, 255, 0.6);
-            --bg-element: rgba(255, 255, 255, 0.8);
-            --text-primary: #1a202c;
-            --text-secondary: #4a5568;
-            --text-muted: #718096;
+            /* Mode clair (par défaut) */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #e2e8f0;
+            --bg-gradient-start: #ffffff;
+            --bg-gradient-end: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --element-bg: rgba(255, 255, 255, 0.8);
+            --element-bg-hover: rgba(255, 255, 255, 0.95);
             --border-color: rgba(0, 0, 0, 0.1);
-            --shadow: rgba(0, 0, 0, 0.1);
+            --modal-bg: #ffffff;
+            --modal-border: rgba(0, 0, 0, 0.2);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --explanation-bg: rgba(255, 255, 255, 0.6);
         }
 
         body.dark-mode {
-            /* Mode Sombre */
-            --bg-primary: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
-            --bg-secondary: rgba(30, 30, 50, 0.4);
-            --bg-element: rgba(30, 30, 50, 0.6);
+            /* Mode sombre */
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a2e;
+            --bg-gradient-start: #0f0f23;
+            --bg-gradient-end: #1a1a2e;
             --text-primary: #ffffff;
             --text-secondary: #ccd6f6;
             --text-muted: #8892b0;
+            --element-bg: rgba(30, 30, 50, 0.6);
+            --element-bg-hover: rgba(30, 30, 50, 0.9);
             --border-color: rgba(255, 255, 255, 0.1);
-            --shadow: rgba(0, 0, 0, 0.5);
+            --modal-bg: #1a1a2e;
+            --modal-border: rgba(255, 255, 255, 0.2);
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --explanation-bg: rgba(30, 30, 50, 0.4);
         }
 
         body {
-            background: var(--bg-primary);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: var(--text-primary);
             padding: 20px;
@@ -51,33 +63,6 @@
             position: relative;
         }
 
-        .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--bg-element);
-            border: 2px solid var(--border-color);
-            border-radius: 50px;
-            padding: 8px 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-            font-size: 0.9em;
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px var(--shadow);
-        }
-
-        .theme-icon {
-            font-size: 1.3em;
-        }
-
         .header h1 {
             font-size: 2.5em;
             background: linear-gradient(135deg, #FF6B00 0%, #FF8C42 100%);
@@ -88,7 +73,7 @@
         }
 
         .header p {
-            color: var(--text-muted);
+            color: var(--text-secondary);
             font-size: 1.1em;
         }
 
@@ -98,11 +83,49 @@
             font-size: 0.9em;
         }
 
+        /* Toggle mode jour/nuit */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--element-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 30px;
+            padding: 8px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px var(--shadow-color);
+        }
+
+        .theme-toggle-icon {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover .theme-toggle-icon {
+            transform: rotate(20deg);
+        }
+
+        .theme-toggle-text {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
         .explanation {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto 40px;
-            padding: 20px;
-            background: var(--bg-secondary);
+            padding: 25px;
+            background: var(--explanation-bg);
             border-radius: 15px;
             border: 1px solid var(--border-color);
             text-align: center;
@@ -111,29 +134,29 @@
 
         .explanation h3 {
             color: #FF8C42;
-            margin-bottom: 10px;
-            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-size: 1.4em;
         }
 
         .explanation p {
             color: var(--text-secondary);
-            line-height: 1.7;
+            line-height: 1.8;
             font-size: 1.05em;
         }
 
         .periodic-table {
             display: grid;
-            grid-template-columns: repeat(18, 100px);
-            grid-auto-rows: 100px;
-            gap: 5px;
-            max-width: 1900px;
+            grid-template-columns: repeat(18, 110px);
+            grid-auto-rows: 110px;
+            gap: 6px;
+            max-width: 2100px;
             margin: 0 auto 40px;
             padding: 20px;
             justify-content: center;
         }
 
         .element {
-            background: var(--bg-element);
+            background: var(--element-bg);
             border: 3px solid;
             border-radius: 12px;
             padding: 10px;
@@ -151,14 +174,7 @@
             transform: scale(1.08);
             box-shadow: 0 0 30px currentColor;
             z-index: 10;
-        }
-
-        body.dark-mode .element:hover {
-            background: rgba(30, 30, 50, 0.9);
-        }
-
-        body:not(.dark-mode) .element:hover {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--element-bg-hover);
         }
 
         .element-number {
@@ -171,15 +187,12 @@
         }
 
         .element-symbol {
-            font-size: 2.4em;
+            font-size: 2.5em;
             font-weight: bold;
+            text-shadow: 0 0 12px currentColor;
             line-height: 1;
             margin: auto 0;
             padding-top: 10px;
-        }
-
-        body.dark-mode .element-symbol {
-            text-shadow: 0 0 12px currentColor;
         }
 
         .element-name {
@@ -209,7 +222,7 @@
         /* Menu contextuel */
         .context-menu {
             position: fixed;
-            background: var(--bg-element);
+            background: var(--modal-bg);
             border: 2px solid;
             border-radius: 10px;
             padding: 10px 0;
@@ -217,7 +230,7 @@
             z-index: 2000;
             min-width: 200px;
             backdrop-filter: blur(10px);
-            box-shadow: 0 10px 40px var(--shadow);
+            box-shadow: 0 10px 40px var(--shadow-color);
         }
 
         .context-menu.active {
@@ -236,7 +249,7 @@
         }
 
         .context-menu-item:hover {
-            background: rgba(128, 128, 128, 0.1);
+            background: var(--border-color);
         }
 
         .context-menu-item:before {
@@ -244,7 +257,7 @@
             color: currentColor;
         }
 
-        /* Positionnement type Mendeleïev */
+        /* Positionnement - 115 éléments */
         .el-1 { grid-column: 1; grid-row: 1; }
         .el-2 { grid-column: 2; grid-row: 1; }
         .el-3 { grid-column: 13; grid-row: 1; }
@@ -347,6 +360,11 @@
         .el-100 { grid-column: 12; grid-row: 7; }
         .el-101 { grid-column: 13; grid-row: 7; }
         .el-102 { grid-column: 14; grid-row: 7; }
+        .el-103 { grid-column: 15; grid-row: 7; }
+        .el-104 { grid-column: 16; grid-row: 7; }
+        .el-105 { grid-column: 17; grid-row: 7; }
+        .el-106 { grid-column: 18; grid-row: 7; }
+
         .separator {
             grid-column: 1 / -1;
             grid-row: 8;
@@ -360,18 +378,16 @@
             height: 2px;
             background: linear-gradient(90deg, transparent, #2DD4BF, transparent);
         }
-        .el-103 { grid-column: 4; grid-row: 9; }
-        .el-104 { grid-column: 5; grid-row: 9; }
-        .el-105 { grid-column: 6; grid-row: 9; }
-        .el-106 { grid-column: 7; grid-row: 9; }
-        .el-107 { grid-column: 8; grid-row: 9; }
-        .el-108 { grid-column: 9; grid-row: 9; }
-        .el-109 { grid-column: 10; grid-row: 9; }
-        .el-110 { grid-column: 11; grid-row: 9; }
-        .el-111 { grid-column: 12; grid-row: 9; }
-        .el-112 { grid-column: 13; grid-row: 9; }
-        .el-113 { grid-column: 14; grid-row: 9; }
-        .el-114 { grid-column: 15; grid-row: 9; }
+        
+        .el-107 { grid-column: 4; grid-row: 9; }
+        .el-108 { grid-column: 5; grid-row: 9; }
+        .el-109 { grid-column: 6; grid-row: 9; }
+        .el-110 { grid-column: 7; grid-row: 9; }
+        .el-111 { grid-column: 8; grid-row: 9; }
+        .el-112 { grid-column: 9; grid-row: 9; }
+        .el-113 { grid-column: 10; grid-row: 9; }
+        .el-114 { grid-column: 11; grid-row: 9; }
+        .el-115 { grid-column: 12; grid-row: 9; }
 
         .legend {
             display: flex;
@@ -387,7 +403,7 @@
             align-items: center;
             gap: 10px;
             padding: 8px 15px;
-            background: var(--bg-secondary);
+            background: var(--element-bg);
             border-radius: 20px;
             border: 1px solid var(--border-color);
         }
@@ -425,7 +441,7 @@
             align-items: center;
             gap: 8px;
             padding: 10px 20px;
-            background: var(--bg-secondary);
+            background: var(--element-bg);
             border-radius: 10px;
             border: 1px solid var(--border-color);
         }
@@ -441,50 +457,76 @@
 
         .footer-contact {
             margin: 25px 0;
-            padding: 20px;
-            background: var(--bg-secondary);
-            border-radius: 15px;
-            display: inline-block;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
         }
 
-        .footer-contact h4 {
-            color: var(--text-primary);
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: var(--element-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px var(--shadow-color);
+        }
+
+        .contact-icon {
+            font-size: 1.3em;
+        }
+
+        .contact-item a {
+            color: #60A5FA;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-sources {
+            margin-top: 25px;
+            padding: 20px;
+            background: var(--explanation-bg);
+            border-radius: 10px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-sources h4 {
+            color: #FF8C42;
             margin-bottom: 15px;
             font-size: 1.1em;
         }
 
-        .contact-links {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            align-items: center;
+        .footer-sources ul {
+            list-style: none;
+            color: var(--text-secondary);
+            line-height: 2;
         }
 
-        .contact-link {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .footer-sources a {
             color: #60A5FA;
             text-decoration: none;
-            font-size: 0.95em;
-            transition: all 0.3s;
-            padding: 8px 15px;
-            border-radius: 8px;
         }
 
-        .contact-link:hover {
-            background: rgba(96, 165, 250, 0.1);
-            transform: translateX(5px);
-        }
-
-        .contact-icon {
-            font-size: 1.2em;
+        .footer-sources a:hover {
+            text-decoration: underline;
         }
 
         .footer p {
             font-size: 0.9em;
             line-height: 1.6;
-            margin-top: 15px;
         }
 
         .footer a {
@@ -504,7 +546,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.85);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -516,14 +558,14 @@
         }
 
         .modal-content {
-            background: var(--bg-element);
+            background: var(--modal-bg);
             border: 2px solid;
             border-radius: 20px;
             padding: 40px;
             max-width: 600px;
             width: 90%;
             position: relative;
-            box-shadow: 0 20px 60px var(--shadow);
+            box-shadow: 0 20px 60px var(--shadow-color);
         }
 
         .modal-close {
@@ -559,9 +601,6 @@
             font-size: 4em;
             font-weight: bold;
             margin: 10px 0;
-        }
-
-        body.dark-mode .modal-symbol {
             text-shadow: 0 0 20px currentColor;
         }
 
@@ -587,13 +626,20 @@
         }
 
         /* Responsive */
-        @media (max-width: 1800px) {
+        @media (max-width: 2200px) {
+            .periodic-table {
+                grid-template-columns: repeat(18, 95px);
+                grid-auto-rows: 95px;
+            }
+        }
+
+        @media (max-width: 1900px) {
             .periodic-table {
                 grid-template-columns: repeat(18, 85px);
                 grid-auto-rows: 85px;
             }
             .element-symbol {
-                font-size: 2em;
+                font-size: 2.2em;
             }
         }
 
@@ -619,13 +665,15 @@
             .element-name {
                 font-size: 0.65em;
             }
-            .theme-toggle {
-                position: static;
-                margin: 20px auto;
-            }
         }
 
         @media (max-width: 1200px) {
+            .header {
+                text-align: center;
+            }
+            .explanation {
+                text-align: center;
+            }
             .periodic-table {
                 grid-template-columns: repeat(18, 55px);
                 grid-auto-rows: 55px;
@@ -643,6 +691,12 @@
         }
 
         @media (max-width: 1000px) {
+            .header {
+                text-align: center;
+            }
+            .explanation {
+                text-align: center;
+            }
             .periodic-table {
                 grid-template-columns: repeat(18, 45px);
                 grid-auto-rows: 45px;
@@ -656,8 +710,18 @@
         }
 
         @media (max-width: 800px) {
+            .header {
+                text-align: center;
+            }
             .header h1 {
                 font-size: 1.8em;
+            }
+            .explanation {
+                text-align: center;
+                padding: 15px;
+            }
+            .explanation p {
+                font-size: 0.95em;
             }
             .periodic-table {
                 grid-template-columns: repeat(9, 80px);
@@ -670,15 +734,23 @@
             .element-name {
                 font-size: 0.7em;
             }
-            .explanation {
-                padding: 15px;
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                padding: 6px 12px;
             }
-            .explanation p {
-                font-size: 0.95em;
+            .theme-toggle-text {
+                display: none;
             }
         }
 
         @media (max-width: 600px) {
+            .header {
+                text-align: center;
+            }
+            .explanation {
+                text-align: center;
+            }
             .periodic-table {
                 grid-template-columns: repeat(6, 70px);
                 grid-auto-rows: 70px;
@@ -695,6 +767,12 @@
         @media (max-width: 450px) {
             body {
                 padding: 10px;
+            }
+            .header {
+                text-align: center;
+            }
+            .explanation {
+                text-align: center;
             }
             .periodic-table {
                 grid-template-columns: repeat(3, 100px);
@@ -718,14 +796,15 @@
     </style>
 </head>
 <body>
+    <div class="theme-toggle" id="themeToggle">
+        <span class="theme-toggle-icon">☀️</span>
+        <span class="theme-toggle-text">Mode Sombre</span>
+    </div>
+
     <div class="header">
-        <button class="theme-toggle" id="themeToggle">
-            <span class="theme-icon" id="themeIcon">☀️</span>
-            <span id="themeText">Mode Clair</span>
-        </button>
         <h1>🧠 Tableau Périodique de l'Intelligence Artificielle</h1>
-        <p>Les 114 Éléments Essentiels de l'IA</p>
-        <p class="version">Version 1.0 - 2026 | Conçu par Naully Nicolas</p>
+        <p>Les 115 Éléments Essentiels de l'IA</p>
+        <p class="version">Version 2.0 - Janvier 2026 | Conçu par Naully Nicolas</p>
     </div>
 
     <div class="explanation">
@@ -796,23 +875,29 @@
         </div>
 
         <div class="footer-contact">
-            <h4>📬 Contact</h4>
-            <div class="contact-links">
-                <a href="mailto:sayhi@naullynicolas.ch" class="contact-link">
-                    <span class="contact-icon">✉️</span>
-                    sayhi@naullynicolas.ch
-                </a>
-                <a href="https://www.linkedin.com/in/naullynicolas/" target="_blank" class="contact-link">
-                    <span class="contact-icon">💼</span>
-                    linkedin.com/in/naullynicolas
-                </a>
+            <div class="contact-item">
+                <span class="contact-icon">📧</span>
+                <a href="mailto:sayhi@naullynicolas.ch">sayhi@naullynicolas.ch</a>
             </div>
+            <div class="contact-item">
+                <span class="contact-icon">💼</span>
+                <a href="https://www.linkedin.com/in/naullynicolas/" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+
+        <div class="footer-sources">
+            <h4>📚 Sources et Inspirations</h4>
+            <ul>
+                <li>• <a href="https://krisium.fr/tableau" target="_blank">Tableau Périodique de la Crise</a> par YPSI SAS (Krisium)</li>
+                <li>• <a href="https://www.youtube.com/watch?v=ESBMgZHzfG0" target="_blank">AI Periodic Table Explained: Mapping LLMs, RAG & AI Agent Frameworks</a> (IBM)</li>
+                <li>• Tableau Périodique de Mendeleïev</li>
+                <li>• Documentation frameworks IA, standards ISO 42001, RGPD</li>
+                <li>• Conception avec Claude (Anthropic)</li>
+            </ul>
         </div>
 
         <p>
             <strong>Tableau Périodique de l'Intelligence Artificielle</strong> par Naully Nicolas<br>
-            Inspiré par le <a href="https://krisium.fr/tableau" target="_blank">Tableau Périodique de la Crise</a> de YPSI SAS (Krisium)<br>
-            et le <a href="https://www.youtube.com/watch?v=ESBMgZHzfG0" target="_blank">Tableau Périodique de l'IA d'IBM</a><br>
             Licence : Creative Commons Attribution-ShareAlike 4.0 International
         </p>
     </div>
@@ -859,12 +944,12 @@
             { number: 16, symbol: "Sp", name: "Supervisé", category: "donnees", description: "Apprentissage avec des exemples étiquetés. Le modèle apprend à partir de paires question-réponse." },
             { number: 17, symbol: "Ns", name: "Non-Supervisé", category: "donnees", description: "Apprentissage sans étiquettes : le modèle découvre les structures cachées dans les données par lui-même." },
             { number: 18, symbol: "Rf", name: "Renforcement", category: "donnees", description: "Apprentissage par essai-erreur avec récompenses. L'agent apprend la stratégie optimale pour maximiser le score." },
-            { number: 19, symbol: "Tf", name: "Transfer Learning", category: "donnees", description: "Réutilisation d'un modèle pré-entraîné. Économise temps et ressources en capitalisant sur l'apprentissage existant." },
-            { number: 20, symbol: "Fa", name: "Fine-tuning", category: "donnees", description: "Ajustement d'un modèle pré-entraîné sur des données spécifiques. Spécialise le modèle pour votre tâche." },
-            { number: 21, symbol: "Pr", name: "Pré-entraînement", category: "donnees", description: "Apprentissage initial sur d'énormes volumes de données. Créé la base de connaissances du modèle." },
+            { number: 19, symbol: "Tf", name: "Transfer", category: "donnees", description: "Réutilisation d'un modèle pré-entraîné. Économise temps et ressources en capitalisant sur l'apprentissage existant." },
+            { number: 20, symbol: "Ft", name: "Fine-tuning", category: "donnees", description: "Ajustement d'un modèle pré-entraîné sur des données spécifiques. Spécialise le modèle pour votre tâche." },
+            { number: 21, symbol: "Pr", name: "Pré-entraînement", category: "donnees", description: "Apprentissage initial sur d'énormes volumes de données. Crée la base de connaissances du modèle." },
             { number: 22, symbol: "Bs", name: "Batch", category: "donnees", description: "Nombre d'exemples traités simultanément. Compromis entre vitesse d'entraînement et qualité de convergence." },
             { number: 23, symbol: "Ep", name: "Époque", category: "donnees", description: "Un passage complet sur tout le dataset. Plus d'époques = plus d'apprentissage, mais risque de surapprentissage." },
-            { number: 24, symbol: "Lr", name: "Taux d'Apprentissage", category: "donnees", description: "Vitesse à laquelle le modèle ajuste ses poids. Trop rapide = instabilité, trop lent = convergence interminable." },
+            { number: 24, symbol: "Lr", name: "Learn Rate", category: "donnees", description: "Vitesse à laquelle le modèle ajuste ses poids. Trop rapide = instabilité, trop lent = convergence interminable." },
 
             // Modèles & Paradigmes (25-38)
             { number: 25, symbol: "Llm", name: "Grand Modèle", category: "modeles", description: "Modèle géant entraîné sur des billions de mots. Capable de comprendre et générer du texte avec une précision impressionnante." },
@@ -876,13 +961,13 @@
             { number: 31, symbol: "Moe", name: "Mix. Experts", category: "modeles", description: "Architecture avec plusieurs sous-modèles spécialisés. Un routeur dirige chaque requête vers l'expert approprié." },
             { number: 32, symbol: "Ds", name: "Distillation", category: "modeles", description: "Compression d'un grand modèle vers un petit. Transfert de connaissances du professeur vers l'élève." },
             { number: 33, symbol: "Qt", name: "Quantification", category: "modeles", description: "Réduction de la précision numérique des poids. Diminue drastiquement la taille et accélère l'inférence." },
-            { number: 34, symbol: "Pr", name: "Élagage", category: "modeles", description: "Suppression des connexions peu importantes. Allège le modèle sans sacrifier la performance." },
+            { number: 34, symbol: "Pru", name: "Élagage", category: "modeles", description: "Suppression des connexions peu importantes. Allège le modèle sans sacrifier la performance." },
             { number: 35, symbol: "Lo", name: "LoRA", category: "modeles", description: "Adaptation efficace en entraînant seulement des matrices de faible rang. Fine-tuning rapide avec peu de mémoire." },
             { number: 36, symbol: "Fs", name: "Few-Shot", category: "modeles", description: "Apprentissage à partir de quelques exemples seulement. Capacité d'adaptation rapide à de nouvelles tâches." },
             { number: 37, symbol: "Zs", name: "Zero-Shot", category: "modeles", description: "Performance sur des tâches jamais vues. Le modèle généralise uniquement grâce à ses connaissances générales." },
             { number: 38, symbol: "Ic", name: "In-Context", category: "modeles", description: "Apprentissage par simple présentation d'exemples dans le prompt. Pas de mise à jour des poids nécessaire." },
 
-            // IA Générative (39-62) - ENRICHIE avec nouveaux éléments
+            // IA Générative (39-56)
             { number: 39, symbol: "Pm", name: "Prompt", category: "generative", description: "Instruction donnée au modèle. L'art du prompting détermine la qualité de la réponse générée." },
             { number: 40, symbol: "Cot", name: "Chain-Thought", category: "generative", description: "Technique qui encourage le modèle à raisonner étape par étape. Améliore drastiquement les capacités de résolution de problèmes." },
             { number: 41, symbol: "Tem", name: "Température", category: "generative", description: "Contrôle la créativité du modèle. Basse = prévisible, haute = créatif mais risqué." },
@@ -895,81 +980,83 @@
             { number: 48, symbol: "Mem", name: "Mémoire", category: "generative", description: "Capacité à retenir les informations des échanges précédents. Essentielle pour des conversations cohérentes." },
             { number: 49, symbol: "Per", name: "Persona", category: "generative", description: "Personnalité et rôle assignés au modèle. Définit comment il se comporte et répond." },
             { number: 50, symbol: "Sys", name: "System", category: "generative", description: "Instructions permanentes qui définissent le comportement du modèle. Le fondement de sa personnalité et de ses règles." },
-            // NOUVEAUX éléments IA Générative
-            { number: 51, symbol: "T2i", name: "Text-to-Image", category: "generative", description: "Génération d'images à partir de descriptions textuelles. Midjourney, DALL-E, Stable Diffusion transforment les mots en visuels." },
-            { number: 52, symbol: "T2v", name: "Text-to-Video", category: "generative", description: "Création de vidéos à partir de prompts textuels. Sora, Runway Gen-2 révolutionnent la production vidéo." },
-            { number: 53, symbol: "T2a", name: "Text-to-Audio", category: "generative", description: "Synthèse de musique et sons à partir de descriptions. AudioCraft, MusicGen créent des compositions originales." },
-            { number: 54, symbol: "T23", name: "Text-to-3D", category: "generative", description: "Génération de modèles 3D à partir de texte. DreamFusion, Point-E transforment les descriptions en objets 3D." },
-            { number: 55, symbol: "I2i", name: "Image-to-Image", category: "generative", description: "Transformation d'images selon des instructions. Style transfer, super-résolution, colorisation automatique." },
-            { number: 56, symbol: "I2v", name: "Image-to-Video", category: "generative", description: "Animation d'images statiques en vidéos. Pika, Genmo transforment les photos en séquences animées." },
-            { number: 57, symbol: "V2v", name: "Video-to-Video", category: "generative", description: "Transformation de vidéos avec conservation de structure. Deepfake, changement de style, restauration vidéo." },
-            { number: 58, symbol: "A2a", name: "Audio-to-Audio", category: "generative", description: "Transformation audio : voix, musique, effets sonores. Conversion de style musical, voice cloning." },
-            { number: 59, symbol: "T2c", name: "Text-to-Code", category: "generative", description: "Génération de code à partir de descriptions naturelles. GitHub Copilot, Claude Code, GPT-4 écrivent des programmes." },
-            { number: 60, symbol: "Inp", name: "Inpainting", category: "generative", description: "Remplissage intelligent de zones manquantes. Photoshop Generative Fill, reconstruction d'images partielles." },
-            { number: 61, symbol: "Out", name: "Outpainting", category: "generative", description: "Extension d'images au-delà des bordures. DALL-E Outpainting, création de contexte autour d'une image." },
-            { number: 62, symbol: "Upc", name: "Upscaling", category: "generative", description: "Amélioration de résolution avec IA. Topaz Gigapixel, Real-ESRGAN augmentent la qualité d'image." },
+            { number: 51, symbol: "T2I", name: "Text-to-Image", category: "generative", description: "Génération d'images à partir de descriptions textuelles. Stable Diffusion, DALL-E, Midjourney transforment les mots en visuels." },
+            { number: 52, symbol: "T2V", name: "Text-to-Video", category: "generative", description: "Création de vidéos à partir de texte. Sora, Runway Gen-2 révolutionnent la production vidéo par IA." },
+            { number: 53, symbol: "T2A", name: "Text-to-Audio", category: "generative", description: "Synthèse audio à partir de texte. Génération de musique, effets sonores, voix réalistes." },
+            { number: 54, symbol: "T2C", name: "Text-to-Code", category: "generative", description: "Génération de code source à partir de descriptions. GitHub Copilot, CodeWhisperer accélèrent le développement." },
+            { number: 55, symbol: "I2I", name: "Image-to-Image", category: "generative", description: "Transformation d'images : style transfer, super-resolution, inpainting, édition guidée." },
+            { number: 56, symbol: "T23", name: "Text-to-3D", category: "generative", description: "Création de modèles 3D à partir de descriptions textuelles. Point-E, Shap-E génèrent des objets 3D." },
 
-            // Applications & Tâches (63-74)
-            { number: 63, symbol: "Cb", name: "Chatbot", category: "applications", description: "Assistant conversationnel intelligent. Répond aux questions, aide les utilisateurs, automatise le support." },
-            { number: 64, symbol: "Cv", name: "Vision Ordi", category: "applications", description: "IA qui 'voit' et analyse les images. Détection d'objets, reconnaissance faciale, analyse médicale." },
-            { number: 65, symbol: "Nl", name: "Langage", category: "applications", description: "Compréhension et manipulation du texte. Analyse de sentiment, extraction d'informations, compréhension sémantique." },
-            { number: 66, symbol: "Ts", name: "Synthèse", category: "applications", description: "Conversion du texte en parole naturelle. Voix réalistes pour assistants vocaux et accessibilité." },
-            { number: 67, symbol: "St", name: "Transcription", category: "applications", description: "Transformation de l'audio en texte écrit. Sous-titrage automatique, prise de notes, analyse de conversations." },
-            { number: 68, symbol: "Rs", name: "Résumé", category: "applications", description: "Condensation automatique de textes longs. Extraction de l'essentiel, gain de temps considérable." },
-            { number: 69, symbol: "Td", name: "Traduction", category: "applications", description: "Conversion entre langues avec compréhension contextuelle. Bien au-delà de la traduction mot à mot." },
-            { number: 70, symbol: "Cl", name: "Classification", category: "applications", description: "Attribution de catégories à des données. Tri automatique, détection de spam, diagnostic médical." },
-            { number: 71, symbol: "Sg", name: "Segmentation", category: "applications", description: "Découpage précis des éléments dans une image. Identification pixel par pixel de chaque objet." },
-            { number: 72, symbol: "Dt", name: "Détection", category: "applications", description: "Localisation d'objets dans les images ou vidéos. Surveillance, véhicules autonomes, analyse de scènes." },
-            { number: 73, symbol: "Rec", name: "Recommandation", category: "applications", description: "Suggestions personnalisées basées sur l'historique. Netflix, Spotify, Amazon utilisent des systèmes de recommandation." },
-            { number: 74, symbol: "Prv", name: "Prévision", category: "applications", description: "Prédiction de tendances futures. Météo, finance, maintenance prédictive utilisent le ML pour anticiper." },
+            // Applications & Tâches (57-68)
+            { number: 57, symbol: "Cb", name: "Chatbot", category: "applications", description: "Assistant conversationnel intelligent. Répond aux questions, aide les utilisateurs, automatise le support." },
+            { number: 58, symbol: "Cv", name: "Vision Ordi", category: "applications", description: "IA qui 'voit' et analyse les images. Détection d'objets, reconnaissance faciale, analyse médicale." },
+            { number: 59, symbol: "Nl", name: "Langage", category: "applications", description: "Compréhension et manipulation du texte. Analyse de sentiment, extraction d'informations, compréhension sémantique." },
+            { number: 60, symbol: "Ts", name: "Synthèse", category: "applications", description: "Conversion du texte en parole naturelle. Voix réalistes pour assistants vocaux et accessibilité." },
+            { number: 61, symbol: "St", name: "Transcription", category: "applications", description: "Transformation de l'audio en texte écrit. Sous-titrage automatique, prise de notes, analyse de conversations." },
+            { number: 62, symbol: "Rs", name: "Résumé", category: "applications", description: "Condensation automatique de textes longs. Extraction de l'essentiel, gain de temps considérable." },
+            { number: 63, symbol: "Td", name: "Traduction", category: "applications", description: "Conversion entre langues avec compréhension contextuelle. Bien au-delà de la traduction mot à mot." },
+            { number: 64, symbol: "Cl", name: "Classification", category: "applications", description: "Attribution de catégories à des données. Tri automatique, détection de spam, diagnostic médical." },
+            { number: 65, symbol: "Sg", name: "Segmentation", category: "applications", description: "Découpage précis des éléments dans une image. Identification pixel par pixel de chaque objet." },
+            { number: 66, symbol: "Dt", name: "Détection", category: "applications", description: "Localisation d'objets dans les images ou vidéos. Surveillance, véhicules autonomes, analyse de scènes." },
+            { number: 67, symbol: "Rec", name: "Recommandation", category: "applications", description: "Suggestion de contenu personnalisé. Algorithmes qui prédisent vos préférences et proposent ce qui vous plaira." },
+            { number: 68, symbol: "Ano", name: "Anomalie", category: "applications", description: "Détection de comportements inhabituels. Cybersécurité, fraude, maintenance prédictive, contrôle qualité." },
 
-            // Frameworks & Outils (75-86)
-            { number: 75, symbol: "Pt", name: "PyTorch", category: "frameworks", description: "Framework de deep learning le plus populaire en recherche. Flexible, pythonique, écosystème riche." },
-            { number: 76, symbol: "Tf", name: "TensorFlow", category: "frameworks", description: "Plateforme ML de Google, solide pour la production. Déploiement facile, optimisation matérielle excellente." },
-            { number: 77, symbol: "Hf", name: "Hugging Face", category: "frameworks", description: "Hub central des modèles pré-entraînés. Bibliothèques puissantes pour NLP et vision, communauté active." },
-            { number: 78, symbol: "Sk", name: "Scikit", category: "frameworks", description: "Bibliothèque Python pour ML classique. Simple, efficace, parfaite pour débuter et pour les modèles traditionnels." },
-            { number: 79, symbol: "Ke", name: "Keras", category: "frameworks", description: "API haut niveau pour construire des réseaux neuronaux rapidement. Interface intuitive, excellent pour prototyper." },
-            { number: 80, symbol: "Jx", name: "JAX", category: "frameworks", description: "Framework de Google pour calcul numérique haute performance. Transformations automatiques de code, idéal pour la recherche." },
-            { number: 81, symbol: "Lc", name: "LangChain", category: "frameworks", description: "Framework pour construire des applications LLM. Orchestration d'agents, chaînage de prompts, intégrations multiples." },
-            { number: 82, symbol: "Ll", name: "LlamaIndex", category: "frameworks", description: "Outil pour connecter des LLM à vos données. Construction d'index intelligents, RAG optimisé." },
-            { number: 83, symbol: "Ol", name: "Ollama", category: "frameworks", description: "Exécution locale de LLM sur votre machine. Confidentialité totale, pas de dépendance cloud." },
-            { number: 84, symbol: "Wd", name: "W&B", category: "frameworks", description: "Plateforme de tracking d'expériences ML. Visualisation, comparaison, collaboration sur les entraînements." },
-            { number: 85, symbol: "Ml", name: "MLflow", category: "frameworks", description: "Gestion du cycle de vie ML : tracking, packaging, déploiement. Open source, agnostique des frameworks." },
-            { number: 86, symbol: "Gr", name: "Gradio", category: "frameworks", description: "Création rapide d'interfaces web pour modèles ML. Démo et partage en quelques lignes de code." },
+            // Frameworks & Outils (69-80)
+            { number: 69, symbol: "Pt", name: "PyTorch", category: "frameworks", description: "Framework de deep learning le plus populaire en recherche. Flexible, pythonique, écosystème riche." },
+            { number: 70, symbol: "Tf", name: "TensorFlow", category: "frameworks", description: "Plateforme ML de Google, solide pour la production. Déploiement facile, optimisation matérielle excellente." },
+            { number: 71, symbol: "Hf", name: "Hugging Face", category: "frameworks", description: "Hub central des modèles pré-entraînés. Bibliothèques puissantes pour NLP et vision, communauté active." },
+            { number: 72, symbol: "Sk", name: "Scikit", category: "frameworks", description: "Bibliothèque Python pour ML classique. Simple, efficace, parfaite pour débuter et pour les modèles traditionnels." },
+            { number: 73, symbol: "Ke", name: "Keras", category: "frameworks", description: "API haut niveau pour construire des réseaux neuronaux rapidement. Interface intuitive, excellent pour prototyper." },
+            { number: 74, symbol: "Jx", name: "JAX", category: "frameworks", description: "Framework de Google pour calcul numérique haute performance. Transformations automatiques de code, idéal pour la recherche." },
+            { number: 75, symbol: "Lc", name: "LangChain", category: "frameworks", description: "Framework pour construire des applications LLM. Orchestration d'agents, chaînage de prompts, intégrations multiples." },
+            { number: 76, symbol: "Ll", name: "LlamaIndex", category: "frameworks", description: "Outil pour connecter des LLM à vos données. Construction d'index intelligents, RAG optimisé." },
+            { number: 77, symbol: "Ol", name: "Ollama", category: "frameworks", description: "Exécution locale de LLM sur votre machine. Confidentialité totale, pas de dépendance cloud." },
+            { number: 78, symbol: "Wd", name: "W&B", category: "frameworks", description: "Plateforme de tracking d'expériences ML. Visualisation, comparaison, collaboration sur les entraînements." },
+            { number: 79, symbol: "Ml", name: "MLflow", category: "frameworks", description: "Gestion du cycle de vie ML : tracking, packaging, déploiement. Open source, agnostique des frameworks." },
+            { number: 80, symbol: "Gr", name: "Gradio", category: "frameworks", description: "Création rapide d'interfaces web pour modèles ML. Démo et partage en quelques lignes de code." },
 
-            // Infrastructure & Compute (87-94)
-            { number: 87, symbol: "Gpu", name: "GPU", category: "infrastructure", description: "Processeur graphique devenu indispensable pour l'IA. Parallélisation massive pour entraînement et inférence rapides." },
-            { number: 88, symbol: "Tpu", name: "TPU", category: "infrastructure", description: "Puce spécialisée de Google pour le deep learning. Optimisée spécifiquement pour les opérations matricielles." },
-            { number: 89, symbol: "Cld", name: "Cloud", category: "infrastructure", description: "Infrastructure à la demande pour l'IA. Scalabilité illimitée, paiement à l'usage, GPU puissants disponibles." },
-            { number: 90, symbol: "Dis", name: "Distribué", category: "infrastructure", description: "Entraînement réparti sur plusieurs machines. Seule solution pour les modèles géants et les datasets massifs." },
-            { number: 91, symbol: "Mlo", name: "MLOps", category: "infrastructure", description: "DevOps appliqué au machine learning. Automatisation, monitoring, versioning des modèles en production." },
-            { number: 92, symbol: "Pip", name: "Pipeline", category: "infrastructure", description: "Chaîne automatisée de traitement des données et modèles. De l'ingestion à la production sans intervention manuelle." },
-            { number: 93, symbol: "Cnt", name: "Conteneur", category: "infrastructure", description: "Encapsulation de l'environnement d'exécution. Reproductibilité parfaite, déploiement simplifié." },
-            { number: 94, symbol: "Scl", name: "Scalabilité", category: "infrastructure", description: "Capacité à gérer une charge croissante. Horizontale (plus de machines) ou verticale (machines plus puissantes)." },
+            // Infrastructure & Compute (81-88)
+            { number: 81, symbol: "Gpu", name: "GPU", category: "infrastructure", description: "Processeur graphique devenu indispensable pour l'IA. Parallélisation massive pour entraînement et inférence rapides." },
+            { number: 82, symbol: "Tpu", name: "TPU", category: "infrastructure", description: "Puce spécialisée de Google pour le deep learning. Optimisée spécifiquement pour les opérations matricielles." },
+            { number: 83, symbol: "Cld", name: "Cloud", category: "infrastructure", description: "Infrastructure à la demande pour l'IA. Scalabilité illimitée, paiement à l'usage, GPU puissants disponibles." },
+            { number: 84, symbol: "Dis", name: "Distribué", category: "infrastructure", description: "Entraînement réparti sur plusieurs machines. Seule solution pour les modèles géants et les datasets massifs." },
+            { number: 85, symbol: "Mlo", name: "MLOps", category: "infrastructure", description: "DevOps appliqué au machine learning. Automatisation, monitoring, versioning des modèles en production." },
+            { number: 86, symbol: "Pip", name: "Pipeline", category: "infrastructure", description: "Chaîne automatisée de traitement des données et modèles. De l'ingestion à la production sans intervention manuelle." },
+            { number: 87, symbol: "Cnt", name: "Conteneur", category: "infrastructure", description: "Encapsulation de l'environnement d'exécution. Reproductibilité parfaite, déploiement simplifié." },
+            { number: 88, symbol: "Scl", name: "Scalabilité", category: "infrastructure", description: "Capacité à gérer une charge croissante. Horizontale (plus de machines) ou verticale (machines plus puissantes)." },
 
-            // Évaluation & Performance (95-102)
-            { number: 95, symbol: "Acc", name: "Précision", category: "evaluation", description: "Proportion de prédictions correctes. Métrique de base mais insuffisante pour les datasets déséquilibrés." },
-            { number: 96, symbol: "F1", name: "Score F1", category: "evaluation", description: "Équilibre entre précision et rappel. Métrique plus robuste que l'accuracy seule." },
-            { number: 97, symbol: "Ppx", name: "Perplexité", category: "evaluation", description: "Mesure de la qualité d'un modèle de langage. Plus elle est basse, mieux le modèle prédit le texte." },
-            { number: 98, symbol: "Ble", name: "BLEU", category: "evaluation", description: "Évaluation de la qualité de traduction. Compare la sortie du modèle aux traductions humaines de référence." },
-            { number: 99, symbol: "Lat", name: "Latence", category: "evaluation", description: "Temps de réponse du modèle. Crucial pour les applications temps réel et l'expérience utilisateur." },
-            { number: 100, symbol: "Thr", name: "Débit", category: "evaluation", description: "Nombre de requêtes traitées par seconde. Mesure de la capacité de production du système." },
-            { number: 101, symbol: "Ram", name: "Mémoire", category: "evaluation", description: "Consommation de RAM/VRAM du modèle. Détermine la taille maximale déployable et le coût d'infrastructure." },
-            { number: 102, symbol: "Flp", name: "FLOPS", category: "evaluation", description: "Opérations en virgule flottante par seconde. Mesure de la puissance de calcul brute nécessaire." },
+            // Évaluation & Performance (89-98)
+            { number: 89, symbol: "Acc", name: "Précision", category: "evaluation", description: "Proportion de prédictions correctes. Métrique de base mais insuffisante pour les datasets déséquilibrés." },
+            { number: 90, symbol: "F1", name: "Score F1", category: "evaluation", description: "Équilibre entre précision et rappel. Métrique plus robuste que l'accuracy seule." },
+            { number: 91, symbol: "Ppx", name: "Perplexité", category: "evaluation", description: "Mesure de la qualité d'un modèle de langage. Plus elle est basse, mieux le modèle prédit le texte." },
+            { number: 92, symbol: "Ble", name: "BLEU", category: "evaluation", description: "Évaluation de la qualité de traduction. Compare la sortie du modèle aux traductions humaines de référence." },
+            { number: 93, symbol: "Lat", name: "Latence", category: "evaluation", description: "Temps de réponse du modèle. Crucial pour les applications temps réel et l'expérience utilisateur." },
+            { number: 94, symbol: "Thr", name: "Débit", category: "evaluation", description: "Nombre de requêtes traitées par seconde. Mesure de la capacité de production du système." },
+            { number: 95, symbol: "Ram", name: "Mémoire", category: "evaluation", description: "Consommation de RAM/VRAM du modèle. Détermine la taille maximale déployable et le coût d'infrastructure." },
+            { number: 96, symbol: "Flp", name: "FLOPS", category: "evaluation", description: "Opérations en virgule flottante par seconde. Mesure de la puissance de calcul brute nécessaire." },
+            { number: 97, symbol: "Ben", name: "Benchmark", category: "evaluation", description: "Tests standardisés pour comparer les modèles. MMLU, HumanEval, SuperGLUE mesurent les capacités." },
+            { number: 98, symbol: "Ldb", name: "Leaderboard", category: "evaluation", description: "Classement public des modèles sur des benchmarks. Course à la performance et transparence communautaire." },
 
-            // Gouvernance & Éthique (103-114)
-            { number: 103, symbol: "Biais", name: "Biais", category: "gouvernance", description: "Discrimination systématique dans les prédictions. Reflète et amplifie les préjugés présents dans les données." },
-            { number: 104, symbol: "Eq", name: "Équité", category: "gouvernance", description: "Traitement juste de tous les groupes. Objectif difficile : équité statistique vs équité individuelle." },
-            { number: 105, symbol: "Xpl", name: "Explicabilité", category: "gouvernance", description: "Capacité à expliquer les décisions du modèle. Essentielle pour la confiance, la réglementation et le debugging." },
-            { number: 106, symbol: "Trp", name: "Transparence", category: "gouvernance", description: "Ouverture sur le fonctionnement, les données, les limitations. Documenter honnêtement les capacités et risques." },
-            { number: 107, symbol: "Alg", name: "Alignement", category: "gouvernance", description: "Conformité du comportement aux valeurs humaines. Défi majeur : faire en sorte que l'IA fasse ce qu'on veut vraiment." },
-            { number: 108, symbol: "Rgpd", name: "RGPD", category: "gouvernance", description: "Règlement européen sur la protection des données. Impacte fortement le développement et l'utilisation de l'IA." },
-            { number: 109, symbol: "Aud", name: "Audit", category: "gouvernance", description: "Évaluation indépendante du système d'IA. Vérification de la conformité, performance, sécurité, éthique." },
-            { number: 110, symbol: "Imp", name: "Impact", category: "gouvernance", description: "Évaluation des conséquences sociales et éthiques. Obligatoire pour les systèmes à haut risque." },
-            { number: 111, symbol: "Iso", name: "ISO 42001", category: "gouvernance", description: "Première norme internationale pour les systèmes de management de l'IA. Cadre de gouvernance et de gestion des risques." },
-            { number: 112, symbol: "Hal", name: "Hallucination", category: "securite", description: "Génération confiante d'informations fausses. Problème majeur des LLM : invente des faits de manière crédible." },
-            { number: 113, symbol: "Jlb", name: "Jailbreak", category: "securite", description: "Contournement des garde-fous de sécurité. Techniques pour faire dire au modèle ce qu'il ne devrait pas." },
-            { number: 114, symbol: "Pvt", name: "Confidentialité", category: "securite", description: "Protection des données sensibles dans l'entraînement et l'utilisation. Risque de mémorisation et de fuite." }
+            // Sécurité & Risques (99-106)
+            { number: 99, symbol: "Hal", name: "Hallucination", category: "securite", description: "Génération confiante d'informations fausses. Problème majeur des LLM : invente des faits de manière crédible." },
+            { number: 100, symbol: "Jlb", name: "Jailbreak", category: "securite", description: "Contournement des garde-fous de sécurité. Techniques pour faire dire au modèle ce qu'il ne devrait pas." },
+            { number: 101, symbol: "Adv", name: "Adversarial", category: "securite", description: "Exemples malicieusement modifiés pour tromper le modèle. Perturbations invisibles qui causent des erreurs grossières." },
+            { number: 102, symbol: "Rob", name: "Robustesse", category: "securite", description: "Résistance aux perturbations et cas limites. Capacité à maintenir la performance en conditions réelles." },
+            { number: 103, symbol: "Pvt", name: "Privacy", category: "securite", description: "Protection des données sensibles dans l'entraînement et l'utilisation. Risque de mémorisation et de fuite." },
+            { number: 104, symbol: "Psn", name: "Poison", category: "securite", description: "Injection de données malveillantes dans le dataset. Corruption délibérée du comportement du modèle." },
+            { number: 105, symbol: "Vol", name: "Vol Modèle", category: "securite", description: "Extraction non autorisée des poids ou du comportement. Risque de propriété intellectuelle et de sécurité." },
+            { number: 106, symbol: "Fui", name: "Fuite", category: "securite", description: "Révélation involontaire d'informations d'entraînement. Le modèle peut répéter des données confidentielles." },
+
+            // Gouvernance & Éthique (107-115)
+            { number: 107, symbol: "Bias", name: "Biais", category: "gouvernance", description: "Discrimination systématique dans les prédictions. Reflète et amplifie les préjugés présents dans les données." },
+            { number: 108, symbol: "Eq", name: "Équité", category: "gouvernance", description: "Traitement juste de tous les groupes. Objectif difficile : équité statistique vs équité individuelle." },
+            { number: 109, symbol: "Xpl", name: "Explicabilité", category: "gouvernance", description: "Capacité à expliquer les décisions du modèle. Essentielle pour la confiance, la réglementation et le debugging." },
+            { number: 110, symbol: "Trp", name: "Transparence", category: "gouvernance", description: "Ouverture sur le fonctionnement, les données, les limitations. Documenter honnêtement les capacités et risques." },
+            { number: 111, symbol: "Alg", name: "Alignement", category: "gouvernance", description: "Conformité du comportement aux valeurs humaines. Défi majeur : faire en sorte que l'IA fasse ce qu'on veut vraiment." },
+            { number: 112, symbol: "Rgpd", name: "RGPD", category: "gouvernance", description: "Règlement européen sur la protection des données. Impacte fortement le développement et l'utilisation de l'IA." },
+            { number: 113, symbol: "Aud", name: "Audit", category: "gouvernance", description: "Évaluation indépendante du système d'IA. Vérification de la conformité, performance, sécurité, éthique." },
+            { number: 114, symbol: "Imp", name: "Impact", category: "gouvernance", description: "Évaluation des conséquences sociales et éthiques. Obligatoire pour les systèmes à haut risque." },
+            { number: 115, symbol: "Iso", name: "ISO 42001", category: "gouvernance", description: "Première norme internationale pour les systèmes de management de l'IA. Cadre de gouvernance et de gestion des risques." }
         ];
 
         const categoryLabels = {
@@ -985,23 +1072,6 @@
             gouvernance: "Gouvernance & Éthique"
         };
 
-        // Toggle thème
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        const themeText = document.getElementById('themeText');
-
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            
-            if (document.body.classList.contains('dark-mode')) {
-                themeIcon.textContent = '🌙';
-                themeText.textContent = 'Mode Sombre';
-            } else {
-                themeIcon.textContent = '☀️';
-                themeText.textContent = 'Mode Clair';
-            }
-        });
-
         // Générer le tableau
         const table = document.getElementById('periodicTable');
         elements.forEach(element => {
@@ -1016,6 +1086,27 @@
             div.oncontextmenu = (e) => showContextMenu(e, element);
             table.appendChild(div);
         });
+
+        // Mode jour/nuit
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('.theme-toggle-icon');
+        const themeText = themeToggle.querySelector('.theme-toggle-text');
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            themeIcon.textContent = isDark ? '🌙' : '☀️';
+            themeText.textContent = isDark ? 'Mode Clair' : 'Mode Sombre';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // Charger le thème sauvegardé (mode clair par défaut)
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeIcon.textContent = '🌙';
+            themeText.textContent = 'Mode Clair';
+        }
 
         // Modal
         const modal = document.getElementById('modal');
@@ -1059,12 +1150,10 @@
             return false;
         }
 
-        // Fermer le menu contextuel
         document.addEventListener('click', () => {
             contextMenu.classList.remove('active');
         });
 
-        // Actions du menu contextuel
         document.querySelectorAll('.context-menu-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -1083,7 +1172,6 @@
             });
         });
 
-        // Fermer avec Escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 modal.classList.remove('active');
